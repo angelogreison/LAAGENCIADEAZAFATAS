@@ -401,12 +401,23 @@
     .gallery li.has-photo span { display: none; }
 
     /* ---------- CARRUSEL DE UNIFORMES ---------- */
-    .uni-carousel { margin-top: 56px; }
-    .uni-controls {
-      display: flex;
-      justify-content: flex-end;
-      gap: 12px;
-      margin-bottom: 28px;
+    .uni-carousel {
+      margin-top: 56px;
+      display: grid;
+      grid-template-columns: 52px minmax(0, 1fr) 52px;
+      column-gap: 20px;
+      align-items: center;
+    }
+    /* Las flechas quedan a los lados del carrusel, a la misma altura que las fotos */
+    .uni-controls { display: contents; }
+    .uni-controls .uni-btn:first-child { grid-column: 1; grid-row: 1; }
+    .uni-controls .uni-btn:last-child { grid-column: 3; grid-row: 1; }
+    .uni-track { grid-column: 2; grid-row: 1; min-width: 0; }
+    .uni-progress { grid-column: 2; grid-row: 2; margin-top: 12px; }
+    @media (max-width: 560px) {
+      .uni-carousel { grid-template-columns: 40px minmax(0, 1fr) 40px; column-gap: 10px; }
+      .uni-btn { width: 40px; height: 40px; flex-basis: 40px; }
+      .uni-btn svg { width: 16px; height: 16px; }
     }
     .uni-btn {
       flex: 0 0 52px;
@@ -437,6 +448,44 @@
     }
     .uni-track::-webkit-scrollbar { display: none; }
     .uni-track:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: var(--radius); }
+
+    /* Servicios: cuadrícula en escritorio y carrusel con flechas en móvil */
+    .services-carousel { display: block; }
+    .services-carousel .uni-controls,
+    .services-carousel .uni-progress { display: none; }
+    .services-grid.uni-track {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      overflow: visible;
+      padding: 0;
+      scroll-snap-type: none;
+    }
+    @media (max-width: 560px) {
+      .services-carousel {
+        display: grid;
+        grid-template-columns: 40px minmax(0, 1fr) 40px;
+        column-gap: 10px;
+        align-items: center;
+      }
+      .services-carousel .uni-controls { display: contents; }
+      .services-carousel .uni-btn:first-child { grid-column: 1; grid-row: 1; }
+      .services-carousel .uni-btn:last-child { grid-column: 3; grid-row: 1; }
+      .services-grid.uni-track {
+        grid-column: 2;
+        grid-row: 1;
+        display: flex;
+        gap: 16px;
+        min-width: 0;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
+        padding: 4px 2px 16px;
+        scrollbar-width: none;
+      }
+      .services-grid.uni-track > li { flex: 0 0 82%; scroll-snap-align: start; }
+      .services-carousel .uni-progress { display: block; grid-column: 2; grid-row: 2; margin-top: 12px; }
+    }
     .uni-card {
       flex: 0 0 min(280px, 78vw);
       scroll-snap-align: start;
@@ -488,22 +537,6 @@
       transition: transform .2s linear;
     }
 
-    /* ---------- PERFILES DENTRO DE LA SECCIÓN DE EMPLEO ---------- */
-    .join-profiles {
-      flex: 0 0 100%;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      list-style: none;
-    }
-    .join-profiles li {
-      padding: 9px 18px;
-      border: 1px solid rgba(255, 255, 255, 0.4);
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.12);
-      color: #fff;
-      font-size: 0.92rem;
-    }
 
     /* ---------- CLIENTS CAROUSEL ---------- */
     .clients { padding: 80px 0; border-top: 1px solid var(--line); overflow: hidden; }
@@ -560,7 +593,8 @@
       width: min(var(--max), calc(100% - 32px));
     }
     .join h2 { color: #fff; margin-bottom: 12px; font-size: clamp(2rem, 4vw, 3rem); }
-    .join p { font-size: 1.05rem; max-width: 520px; opacity: .9; }
+    .join > div:first-child { flex: 1 1 100%; }
+    .join p { font-size: 1.05rem; max-width: none; opacity: .9; }
     .join-actions { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
     .join .btn { background: var(--gold); color: var(--ink); box-shadow: none; }
     .join .btn:hover { transform: translateY(-3px); filter: brightness(1.06); }
@@ -917,7 +951,12 @@
         <span class="eyebrow reveal" data-i18n="servicesEyebrow">Servicios</span>
         <h2 class="reveal" style="--d:.1s" data-i18n="servicesTitle">Servicios para tu evento y tu marca.</h2>
       </div>
-      <ul class="services-grid">
+      <div class="uni-carousel services-carousel">
+        <div class="uni-controls">
+          <button class="uni-btn" type="button" data-dir="-1" aria-label="Anterior"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button class="uni-btn" type="button" data-dir="1" aria-label="Siguiente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        </div>
+        <ul class="services-grid uni-track">
         <li class="service-card reveal" style="--d:0s"><div class="service-img"><img src="Servicios/2dbef56e07b8b94079e725188aee448a_56afbd3e3660d1237daa185cbe2c6636_img_3183.jfif" alt="" data-i18n-alt="s1" loading="lazy"></div><div class="service-body"><h3 data-i18n="s1">Grandes eventos</h3></div></li>
         <li class="service-card reveal" style="--d:.08s"><div class="service-img"><img src="Servicios/drivers.webp" alt="" data-i18n-alt="s2" loading="lazy"></div><div class="service-body"><h3 data-i18n="s2">Drivers</h3></div></li>
         <li class="service-card reveal" style="--d:.16s"><div class="service-img"><img src="Servicios/dad6a4a444bfcdfa9a07a460f5a446c1_ae077a4d389546cde4f3eadfffbea81b_animacion-ninos-territorio-imaginamarzo021.jpg" alt="" data-i18n-alt="s3" loading="lazy"></div><div class="service-body"><h3 data-i18n="s3">Street marketing y animaciones</h3></div></li>
@@ -926,7 +965,9 @@
         <li class="service-card reveal" style="--d:.4s"><div class="service-img"><img src="Servicios/03a4c4aa38fe58eb4256bb039677841d_8a8afc6dacc6ae47f18985584948cb28_pexels-tiger-lily-4483610-1-.jpg" alt="" data-i18n-alt="s6" loading="lazy"></div><div class="service-body"><h3 data-i18n="s6">Almacenaje, logística y producción</h3></div></li>
         <li class="service-card reveal" style="--d:.48s"><div class="service-img"><img src="Servicios/canalhoreca.webp" alt="" data-i18n-alt="s7" loading="lazy"></div><div class="service-body"><h3 data-i18n="s7">Canal HORECA (hostelería)</h3></div></li>
         <li class="service-card reveal" style="--d:.56s"><div class="service-img"><img src="Servicios/79c186d3df232aff1408634c3cb9a6cc_7f90228e8d027afab6ec1632c4a3d11f_promotoras-cc-el-saler-vlc-todas.jpg" alt="" data-i18n-alt="s8" loading="lazy"></div><div class="service-body"><h3 data-i18n="s8">Campañas en punto de venta (retail)</h3></div></li>
-      </ul>
+        </ul>
+        <div class="uni-progress"><div class="uni-progress-fill"></div></div>
+      </div>
     </div>
   </section>
 
@@ -985,25 +1026,12 @@
       <div class="join reveal">
         <div>
           <h2 data-i18n="joinTitle">¿Quieres formar parte del equipo?</h2>
-          <p data-i18n="joinText">Buscamos personas con energía, talento y ganas de trabajar en eventos y activaciones de marca.</p>
+          <p data-i18n="joinText">Buscamos personas con energía, talento y ganas de trabajar en eventos y activaciones de marca. ¿Tu perfil encaja con azafata de congresos o de imagen, bilingüe, modelo, promotor, personal de hostelería, montador, conductor, coordinador, animador o intérprete? ¡Nos encantaría conocerte!</p>
         </div>
         <div class="join-actions">
           <a href="https://laagenciadeazafatas.com/gestion/signin" class="btn" target="_blank" rel="noopener" data-i18n="joinCta">Únete a nuestro equipo →</a>
           <a href="https://laagenciadeazafatas.com/gestion" class="text-link" target="_blank" rel="noopener" data-i18n="joinLogin">Acceso trabajador registrado</a>
         </div>
-        <ul class="join-profiles">
-          <li data-i18n="p1">Azafatos de congresos</li>
-          <li data-i18n="p2">Azafatos de imagen</li>
-          <li data-i18n="p3">Azafatos bilingües</li>
-          <li data-i18n="p4">Modelos</li>
-          <li data-i18n="p5">Promotores</li>
-          <li data-i18n="p6">Personal de hostelería</li>
-          <li data-i18n="p7">Montadores / técnicos</li>
-          <li data-i18n="p8">Conductores</li>
-          <li data-i18n="p9">Coordinadores</li>
-          <li data-i18n="p10">Animadores / actores</li>
-          <li data-i18n="p11">Intérpretes</li>
-        </ul>
       </div>
     </div>
   </section>
@@ -1195,7 +1223,7 @@
           p9: 'Coordinadores', p10: 'Animadores / actores', p11: 'Intérpretes',
           clientsLabel: 'Marcas que confían en nosotros',
           joinTitle: '¿Quieres formar parte del equipo?',
-          joinText: 'Buscamos personas con energía, talento y ganas de trabajar en eventos y activaciones de marca.',
+          joinText: 'Buscamos personas con energía, talento y ganas de trabajar en eventos y activaciones de marca. ¿Tu perfil encaja con azafata de congresos o de imagen, bilingüe, modelo, promotor, personal de hostelería, montador, conductor, coordinador, animador o intérprete? ¡Nos encantaría conocerte!',
           joinCta: 'Únete a nuestro equipo →', joinCtaShort: 'Únete a nuestro equipo',
           joinLogin: 'Acceso trabajador registrado',
           contactEyebrow: 'Contacto', contactTitle: '¿Necesitas un presupuesto?',
@@ -1245,7 +1273,7 @@
           p9: 'Coordinators', p10: 'Entertainers / actors', p11: 'Interpreters',
           clientsLabel: 'Brands that trust us',
           joinTitle: 'Want to join the team?',
-          joinText: 'We are looking for people with energy, talent and a drive to work on events and brand activations.',
+          joinText: 'We are looking for people with energy, talent and a drive to work on events and brand activations. Does your profile fit congress, image or bilingual hostess, model, promoter, hospitality staff, technician, driver, coordinator, entertainer or interpreter? We would love to meet you!',
           joinCta: 'Join our team →', joinCtaShort: 'Join our team',
           joinLogin: 'Registered worker login',
           contactEyebrow: 'Contact', contactTitle: 'Need a quote?',
